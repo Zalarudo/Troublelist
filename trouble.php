@@ -7,7 +7,7 @@ if(!isLoggedin()){
     $_SESSION['msg'] = "You must log in first";
     header('location:login.php');
 }
-$db = mysqli_connect('141.8.192.153', 'a0334946_todotask', '123789', 'a0334946_todotask');
+$db = mysqli_connect('host', 'login', 'pass', 'basenam');
 $users_task = $_SESSION['user']['username'];
 
 if(isset($_POST['submit'])){
