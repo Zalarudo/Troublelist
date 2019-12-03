@@ -48,13 +48,12 @@ function register(){
 
             //создаем таблицу для листа
 
-            $db2 = mysqli_connect('host', 'login', 'pass', 'basename');
             $query2 ="CREATE Table $username (
                     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     task VARCHAR(200) NOT NULL  )";
 
-        $result = mysqli_query($db2, $query2) or die("Ошибка " . mysqli_error($db2));
-        mysqli_close($db2);
+        $result = mysqli_query($db, $query2) or die("Ошибка " . mysqli_error($db2));
+
 
         header('location: trouble.php');
     }
@@ -154,5 +153,50 @@ if(isset($_GET['logout'])){
     header('location: login.php');
 }
 
+
+
+
+
+//смена пароля
+if(isset($_POST['change_btn'])){
+    change();
+
+}
+
+function change()
+{
+
+    global $db, $username, $errors;
+
+    $username = e($_POST['username']);
+    $password_1 = e($_POST['password_1']);
+    $password_2 = e($_POST['password_2']);
+
+    if (empty($username)) {
+
+        array_push($errors, "Username is required");
+    }
+    if (empty($password_1)) {
+        array_push($errors, "Password is required");
+    }
+    if (empty($password_2)) {
+        array_push($errors, "The two passwords do not match");
+    }
+
+    if (count($errors) == 0) {
+        $password = md5($password_1); //шифрование пароля
+
+        $query = "UPDATE users SET password = '$password' WHERE username='$username'";
+        $result = mysqli_query($db, $query);
+        $query2 = "SELECT * FROM users WHERE username = '$username' AND password = '$password' LIMIT 1";
+        $result2 = mysqli_query($db, $query2);
+        if (mysqli_num_rows($result2) == 1) {
+            $_SESSION['success'] = "Your password change success";
+            header('location: login.php');
+        } else {
+            array_push($errors, "Wrong username/password combination");
+        }
+    }
+}
 
 ?>
