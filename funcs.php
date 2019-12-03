@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$db = mysqli_connect('141.8.192.153', 'a0334946_multi_login', 'K1a2c3h4o5k6', 'a0334946_multi_login');
+$db = mysqli_connect('host', 'login', 'pass', 'basename');
 
 $username = "";
 $errors = array();
@@ -48,7 +48,7 @@ function register(){
 
             //создаем таблицу для листа
 
-            $db2 = mysqli_connect('141.8.192.153', 'a0334946_todotask', '123789', 'a0334946_todotask');
+            $db2 = mysqli_connect('host', 'login', 'pass', 'basename');
             $query2 ="CREATE Table $username (
                     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     task VARCHAR(200) NOT NULL  )";
