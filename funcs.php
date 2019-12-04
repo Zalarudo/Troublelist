@@ -45,16 +45,6 @@ function register(){
             $_SESSION['user'] = getUserById($logged_in_user_id);
             $_SESSION['success'] = "You are now logged in";
 
-
-            //создаем таблицу для листа
-
-            $query2 ="CREATE Table $username (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    task VARCHAR(200) NOT NULL  )";
-
-        $result = mysqli_query($db, $query2) or die("Ошибка " . mysqli_error($db2));
-
-
         header('location: trouble.php');
     }
 
