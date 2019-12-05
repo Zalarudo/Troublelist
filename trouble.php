@@ -7,8 +7,10 @@ if(!isLoggedin()){
     $_SESSION['msg'] = "You must log in first";
     header('location:login.php');
 }
-$db = mysqli_connect('host', 'login', 'pass', 'basename');
+$db = mysqli_connect('host', 'login', 'pass', 'bdname');
 $user_name = $_SESSION['user']['username'];
+$user_id = $_SESSION['user']['id'];
+
 
 if(isset($_POST['submit'])){
     $task = $_POST['task'];
@@ -16,9 +18,10 @@ if(isset($_POST['submit'])){
     if(empty($task)){
         $errors = "У тебя не может быть все хорошо, не лги хотя бы себе!";
     }else{
-//        mysqli_query($db, "INSERT INTO $users_task (task) VALUES ('$task') ");
-        mysqli_query($db, "INSERT INTO tasks (username, task) VALUES ('$user_name', '$task')");
+
+        mysqli_query($db, "INSERT INTO tasks (user_id, task) VALUES ('$user_id', '$task')");
         header('location: trouble.php');
+
     }
 }
 
@@ -29,7 +32,19 @@ if(isset($_GET['del_task'])){
     header('location: trouble.php');
 }
 
-$tasks =  mysqli_query($db, "SELECT * FROM tasks WHERE username = '$user_name'");
+$tasks =  mysqli_query($db, "SELECT * FROM tasks WHERE user_id = '$user_id'");
+
+
+//important trouble
+
+    if(isset($_GET['imp_task'])){
+
+        $id = $_GET['imp_task'];
+        mysqli_query($db, "UPDATE tasks SET important = '&#9733;' WHERE id = '$id'");
+        header('location: trouble.php');
+
+    }
+
 
 
 ?>
@@ -45,6 +60,10 @@ $tasks =  mysqli_query($db, "SELECT * FROM tasks WHERE username = '$user_name'")
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/style.css">
     <title>My troubles</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="js/main.js"></script>
+
 </head>
 <body>
 
@@ -70,7 +89,9 @@ $tasks =  mysqli_query($db, "SELECT * FROM tasks WHERE username = '$user_name'")
     <tr>
         <th>№</th>
         <th>Проблема</th>
+        <th>Важное</th>
         <th>Решено</th>
+        <!-- <th>Начать</th> -->
     </tr>
     </thead>
     <tbody>
@@ -82,18 +103,23 @@ $tasks =  mysqli_query($db, "SELECT * FROM tasks WHERE username = '$user_name'")
         <tr>
             <td class = "numb"><?php echo $i;?></td>
             <td class = "task"><?php echo $row['task'];?></td>
-            <td class="delete">
+            <td class = "inproccess"><a href="trouble.php?imp_task=<?php echo $row['id']; ?>"><?php echo $row['important']; ?></a></td>
+            <td class = "delete">
                 <a href="trouble.php?del_task=<?php echo $row['id'];?>">&#9745;</a>
             </td>
+            <!-- <td class = "timer"><span id="timer_count"></span></td> -->
+
         </tr>
 
         <?php  $i++; } ?>
-
     </tbody>
 
 </table>
-
 <button class="add_btn logout_btn"><a href="trouble.php?logout='1'">Выйти</a></button>
+
+
+
+
 </body>
 </html>
 
